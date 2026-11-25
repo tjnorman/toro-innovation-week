@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toro Innovation Week: one college, one day</title>
+<meta name="description" content="A faculty proposal to run the CSUDH Innovation Incubator as a shared campus space: each college hosts one day a week with an LA28 focus.">
+<style>
+:root{--bg:#ffffff;--card:#f6f5f1;--ink:#1c1b19;--soft:#5d5b54;--line:#dedcd3;--accent:#860038;--gold:#b88a00;--on-accent:#fff;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#151413;--card:#201f1d;--ink:#f0efec;--soft:#b5b3a8;--line:#35332f;--accent:#e0608c;--gold:#e3b341;--on-accent:#1c1b19}}
+*{box-sizing:border-box}
+body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+main{max-width:1120px;margin:0 auto;padding:0 20px 80px}
+h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.05;margin:0 0 .3em;letter-spacing:-.02em}
+h2{font-size:1.7rem;margin:2.6em 0 .3em;letter-spacing:-.01em}
+h3{margin:.2em 0;font-size:1.05rem}
+p.lede{font-size:1.2rem;color:var(--soft);max-width:60ch;margin:.2em 0 1em}
+p.sec{color:var(--soft);max-width:68ch;margin:0 0 1.2em}
+.status{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 14px;font-size:.85rem;color:var(--soft);margin-bottom:22px}
+.status b{color:var(--accent)}
+header.hero{padding:64px 0 10px}
+nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.92rem;margin:18px 0 0}
+nav a{color:var(--soft);text-decoration:none;border-bottom:1px solid var(--line)}
+nav a:hover{color:var(--accent)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:22px 0}
+.tile{background:var(--card);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.tile b{font-size:2rem;line-height:1.1;letter-spacing:-.02em}
+.tile span{font-size:.93rem}
+.tile small{color:var(--soft);font-size:.8rem}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.three div,.pcard{background:var(--card);border-radius:12px;padding:18px}
+.three p,.pcard p{margin:.3em 0;color:var(--soft);font-size:.95rem}
+.pcard .goal{color:var(--ink)}
+/* calendar */
+.cal{display:grid;grid-template-columns:48px repeat(5,1fr);gap:8px;margin-top:8px}
+.axis{position:relative;margin-top:44px;height:551px}
+.axis span{position:absolute;right:4px;transform:translateY(-50%);font-size:.72rem;color:var(--soft);white-space:nowrap}
+.col{all:unset;display:block;cursor:pointer;border-radius:10px;--col:var(--c)}
+@media (prefers-color-scheme:dark){.col,.daycard{--col:var(--cd)}}
+.daycard{--col:var(--c)}
+.col:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.colhead{display:flex;justify-content:space-between;align-items:center;height:36px;padding:0 10px;border-radius:8px;background:var(--col);color:var(--on);font-size:.82rem;font-weight:600;margin-bottom:8px}
+.colhead b{font-size:.95rem}
+.track{display:block;position:relative;background:repeating-linear-gradient(to bottom,var(--line) 0 1px,transparent 1px 58px);background-position:0 29px;border-radius:6px}
+.blk{position:absolute;left:0;right:0;border-radius:6px;padding:5px 8px;overflow:hidden;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;gap:1px}
+.blk .tag,.sched .tag{font-size:.6rem;letter-spacing:.04em;font-weight:700;color:var(--soft)}
+.blk .lab{font-size:.78rem;font-weight:600;line-height:1.2}
+.blk.k-college{background:var(--col);border-color:transparent;color:var(--on)}
+.blk.k-college .tag{color:var(--on);opacity:.85}
+.blk.k-program{border-style:dashed}
+.col:hover .blk,.col[aria-pressed=true] .blk{border-color:var(--col)}
+.col[aria-pressed=true] .colhead{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--col)}
+.hint{font-size:.85rem;color:var(--soft);margin:10px 0 0}
+.daycards{margin-top:16px}
+.daycard{display:none;background:var(--card);border-radius:12px;padding:20px;border-left:6px solid var(--col)}
+.daycard.on{display:block}
+.daycard header{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.pill{background:var(--col);color:var(--on);border-radius:999px;padding:2px 12px;font-size:.8rem;font-weight:700}
+.daycard ul{margin:.3em 0 .6em;padding-left:1.2em}
+.daycard .sched{display:none;list-style:none;padding:0}
+.sched li{padding:7px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column}
+.daycard .meta,.daycard .sub{font-size:.92rem;margin:.4em 0}
+@media (max-width:860px){.cal{display:none}.daycard{display:block;margin-bottom:14px}.daycard .sched{display:block}.hint{display:none}}
+/* options */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;margin:6px 0 16px}
+.seg button{all:unset;cursor:pointer;padding:7px 18px;border-radius:999px;font-size:.92rem}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--on-accent);font-weight:600}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.bars{display:grid;gap:14px;margin:8px 0 6px}
+.bar{display:grid;grid-template-columns:minmax(110px,200px) 1fr;gap:12px;align-items:center;font-size:.93rem}
+.bar .rail{position:relative;height:28px}
+.bar .fill{height:100%;border-radius:0 4px 4px 0;background:var(--soft);opacity:.55;transition:width .35s;min-width:2px}
+.bar.em .fill{background:var(--accent);opacity:1}
+.bar .val{position:absolute;top:50%;transform:translateY(-50%);padding-left:8px;font-weight:600;white-space:nowrap;transition:left .35s}
+.bar .ref{position:absolute;top:-5px;bottom:-5px;border-left:2px dashed var(--gold)}
+.twocol{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:26px}
+.panel{background:var(--card);border-radius:12px;padding:20px}
+.panel h3{margin-bottom:10px}
+.note{font-size:.85rem;color:var(--soft)}
+.verdict{margin:16px 0 0;padding:14px 16px;border-left:4px solid var(--accent);background:var(--card);border-radius:0 10px 10px 0}
+ul.plain{padding-left:1.2em}
+ol.road{list-style:none;padding:0;margin:0;border-left:2px solid var(--line);margin-left:8px}
+ol.road li{position:relative;padding:8px 0 8px 22px;display:flex;gap:14px;flex-wrap:wrap}
+ol.road li::before{content:"";position:absolute;left:-8px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--soft);border:2px solid var(--bg)}
+ol.road li.m-gate::before{background:var(--accent);border-radius:2px;transform:rotate(45deg)}
+ol.road li.m-games::before{background:var(--gold)}
+ol.road time{color:var(--soft);min-width:108px;font-size:.92rem}
+ol.road li.m-gate span,ol.road li.m-games span{font-weight:600}
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-size:.85rem;color:var(--soft)}
+footer li{margin:.3em 0}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+<header class="hero">
+  <span class="status"><b>Faculty proposal</b> · not a university decision · 2026-11-24</span>
+  <h1>Toro Innovation Week</h1>
+  <p class="lede">Five colleges. Five days. One Innovation Incubator. Each college hosts one day a week in the CSUDH Innovation Incubator, led by a faculty member with 3 WTU, built around innovation with an LA28 focus.</p>
+  <nav><a href="#week">The week</a><a href="#options">Two options</a><a href="#results">Results so far</a><a href="#targets">Targets</a><a href="#partners">Partners</a><a href="#la28">Why LA28</a><a href="#roadmap">Roadmap</a><a href="#sources">Sources</a></nav>
+  <div class="tiles"><div class="tile"><b>5</b><span>colleges, one day each</span></div><div class="tile"><b>3 WTU</b><span>per college faculty lead</span></div><div class="tile"><b>75</b><span>college days a semester</span></div><div class="tile"><b>2</b><span>speaker series a week</span></div><div class="tile"><b>5</b><span>student groups at home here</span></div><div class="tile"><b>60</b><span>shared student hours a week</span></div></div>
+</header>
+
+<section>
+  <h2>The idea in one minute</h2>
+  <div class="three">
+    <div><h3>One college, one day</h3><p>Each of the five colleges takes a weekday. The college sets the programming, and its students and faculty fill the room.</p></div>
+    <div><h3>3 WTU for a faculty lead</h3><p>Three WTU is 135 hours a semester, about 9 hours a week: one day. Each dean names the lead.</p></div>
+    <div><h3>One shared student team</h3><p>Student assistants are one pool of 60 hours a week, so every college day gets 12 hours of help without hiring its own staff.</p></div>
+  </div>
+  <p class="sec" style="margin-top:16px">Today the Incubator runs on one faculty director with 6 WTU and no staff. Current programs need about 730 faculty hours a semester; 270 are funded. This proposal spreads the work across the colleges that benefit from it.</p>
+</section>
+
+<section id="week">
+  <h2>The week</h2>
+  <p class="sec">Every day has a college block, a Catapult studio run with Community Engaged Learning, and a student group. Tuesday and Thursday add a lunch speaker series.</p>
+  <div class="cal" role="group" aria-label="Proposed weekly calendar">
+    <div class="axis"><span style="top:29px">8 am</span><span style="top:87px">9 am</span><span style="top:145px">10 am</span><span style="top:203px">11 am</span><span style="top:261px">12 pm</span><span style="top:319px">1 pm</span><span style="top:377px">2 pm</span><span style="top:435px">3 pm</span><span style="top:493px">4 pm</span><span style="top:551px">5 pm</span></div>
+    <button class="col" data-day="mon" style="--c:#2a78d6;--cd:#3987e5;--on:#ffffff" aria-label="Monday: Natural and Behavioral Sciences"><span class="colhead">Monday<b>CNBS</b></span><span class="track" style="height:551px"><div class="blk k-college" style="top:87px;height:170px" title="CNBS innovation block, 9:00–12:00"><span class="tag">COLLEGE BLOCK · 9:00–12:00</span><span class="lab">CNBS innovation block</span></div><div class="blk k-catapult" style="top:319px;height:68px" title="Catapult studio, 1:00–2:15"><span class="tag">CATAPULT · 1:00–2:15</span><span class="lab">Catapult studio</span></div><div class="blk k-group" style="top:406px;height:68px" title="Toro Guardian Scholars, 2:30–3:45"><span class="tag">STUDENT GROUP · 2:30–3:45</span><span class="lab">Toro Guardian Scholars</span></div><div class="blk k-partner" style="top:493px;height:54px" title="Learning Center drop-in, 4:00–5:00"><span class="tag">SUCCESS PARTNER · 4:00–5:00</span><span class="lab">Learning Center drop-in</span></div></span></button><button class="col" data-day="tue" style="--c:#eb6834;--cd:#d95926;--on:#ffffff" aria-label="Tuesday: Health, Human Services, and Nursing"><span class="colhead">Tuesday<b>CHHSN</b></span><span class="track" style="height:551px"><div class="blk k-college" style="top:87px;height:126px" title="CHHSN innovation block, 9:00–11:15"><span class="tag">COLLEGE BLOCK · 9:00–11:15</span><span class="lab">CHHSN innovation block</span></div><div class="blk k-speaker" style="top:232px;height:83px" title="Speaker series 1 + Rotaract, 11:30–1:00"><span class="tag">SPEAKERS · 11:30–1:00</span><span class="lab">Speaker series 1 + Rotaract</span></div><div class="blk k-catapult" style="top:334px;height:68px" title="Catapult studio, 1:15–2:30"><span class="tag">CATAPULT · 1:15–2:30</span><span class="lab">Catapult studio</span></div><div class="blk k-partner" style="top:406px;height:68px" title="Writing Center pitch hour, 2:30–3:45"><span class="tag">SUCCESS PARTNER · 2:30–3:45</span><span class="lab">Writing Center pitch hour</span></div></span></button><button class="col" data-day="wed" style="--c:#1baf7a;--cd:#199e70;--on:#ffffff" aria-label="Wednesday: Arts and Humanities, with Labor Studies"><span class="colhead">Wednesday<b>CAH</b></span><span class="track" style="height:551px"><div class="blk k-college" style="top:87px;height:170px" title="CAH + Labor Studies block, 9:00–12:00"><span class="tag">COLLEGE BLOCK · 9:00–12:00</span><span class="lab">CAH + Labor Studies block</span></div><div class="blk k-catapult" style="top:319px;height:54px" title="Catapult studio, 1:00–2:00"><span class="tag">CATAPULT · 1:00–2:00</span><span class="lab">Catapult studio</span></div><div class="blk k-group" style="top:392px;height:83px" title="IEEE Computer Society, 2:15–3:45"><span class="tag">STUDENT GROUP · 2:15–3:45</span><span class="lab">IEEE Computer Society</span></div><div class="blk k-partner" style="top:493px;height:54px" title="First-Year + Transfer hour, 4:00–5:00"><span class="tag">SUCCESS PARTNER · 4:00–5:00</span><span class="lab">First-Year + Transfer hour</span></div></span></button><button class="col" data-day="thu" style="--c:#eda100;--cd:#c98500;--on:#0b0b0b" aria-label="Thursday: Education"><span class="colhead">Thursday<b>COE</b></span><span class="track" style="height:551px"><div class="blk k-college" style="top:87px;height:126px" title="COE innovation block, 9:00–11:15"><span class="tag">COLLEGE BLOCK · 9:00–11:15</span><span class="lab">COE innovation block</span></div><div class="blk k-speaker" style="top:232px;height:83px" title="Speaker series 2: LA28 Ready, 11:30–1:00"><span class="tag">SPEAKERS · 11:30–1:00</span><span class="lab">Speaker series 2: LA28 Ready</span></div><div class="blk k-catapult" style="top:334px;height:68px" title="Catapult studio, 1:15–2:30"><span class="tag">CATAPULT · 1:15–2:30</span><span class="lab">Catapult studio</span></div><div class="blk k-group" style="top:406px;height:68px" title="HRMA, 2:30–3:45"><span class="tag">STUDENT GROUP · 2:30–3:45</span><span class="lab">HRMA</span></div><div class="blk k-partner" style="top:493px;height:54px" title="Writing Center pitch hour, 4:00–5:00"><span class="tag">SUCCESS PARTNER · 4:00–5:00</span><span class="lab">Writing Center pitch hour</span></div></span></button><button class="col" data-day="fri" style="--c:#e87ba4;--cd:#d55181;--on:#ffffff" aria-label="Friday: Business Administration and Public Policy"><span class="colhead">Friday<b>CBAPP</b></span><span class="track" style="height:551px"><div class="blk k-program" style="top:0px;height:141px" title="Carson academy (if approved), 7:30–10:00"><span class="tag">PROGRAM · 7:30–10:00</span><span class="lab">Carson academy (if approved)</span></div><div class="blk k-catapult" style="top:160px;height:68px" title="Catapult studio + supplier clinic, 10:15–11:30"><span class="tag">CATAPULT · 10:15–11:30</span><span class="lab">Catapult studio + supplier clinic</span></div><div class="blk k-group" style="top:232px;height:68px" title="Latine Business Student Assoc., 11:30–12:45"><span class="tag">STUDENT GROUP · 11:30–12:45</span><span class="lab">Latine Business Student Assoc.</span></div><div class="blk k-college" style="top:319px;height:228px" title="CBAPP block: Alpha Start, 1:00–5:00"><span class="tag">COLLEGE BLOCK · 1:00–5:00</span><span class="lab">CBAPP block: Alpha Start</span></div></span></button>
+  </div>
+  <p class="hint">Select a day to see its LA28 focus and starting ideas. Days and hours are a starting proposal, open for the deans to trade.</p>
+  <div class="daycards"><article class="daycard" id="day-mon" style="--c:#2a78d6;--cd:#3987e5;--on:#ffffff"><header><span class="pill">Monday</span><h3>Natural and Behavioral Sciences</h3></header><p class="focus"><b>LA28 focus:</b> Games technology, data, and sustainability</p><ul class="sched"><li class="k-college"><span class="tag">9:00–12:00 · COLLEGE BLOCK</span>CNBS innovation block</li><li class="k-catapult"><span class="tag">1:00–2:15 · CATAPULT</span>Catapult studio</li><li class="k-group"><span class="tag">2:30–3:45 · STUDENT GROUP</span>Toro Guardian Scholars</li><li class="k-partner"><span class="tag">4:00–5:00 · SUCCESS PARTNER</span>Learning Center drop-in</li></ul><p class="sub"><b>Starting ideas</b></p><ul><li>Student teams map transit, heat, and crowd data for Carson and campus venues</li><li>Computing and systems students build simple tools for local suppliers</li><li>Sustainability projects tied to the five Olympic and three Paralympic sports on campus</li></ul><p class="meta"><b>Student group:</b> Toro Guardian Scholars · <b>Partner hour:</b> Toro Learning &amp; Testing Center</p></article><article class="daycard" id="day-tue" style="--c:#eb6834;--cd:#d95926;--on:#ffffff"><header><span class="pill">Tuesday</span><h3>Health, Human Services, and Nursing</h3></header><p class="focus"><b>LA28 focus:</b> Health, wellness, and adaptive sport</p><ul class="sched"><li class="k-college"><span class="tag">9:00–11:15 · COLLEGE BLOCK</span>CHHSN innovation block</li><li class="k-speaker"><span class="tag">11:30–1:00 · SPEAKERS</span>Speaker series 1 + Rotaract</li><li class="k-catapult"><span class="tag">1:15–2:30 · CATAPULT</span>Catapult studio</li><li class="k-partner"><span class="tag">2:30–3:45 · SUCCESS PARTNER</span>Writing Center pitch hour</li></ul><p class="sub"><b>Starting ideas</b></p><ul><li>Paralympic sports on campus as a focus for adaptive-sport and accessibility ventures</li><li>Visitor and community health projects with local clinics and nonprofits</li><li>Wellness ventures from the SDSU Social Venture Challenge pipeline</li></ul><p class="meta"><b>Student group:</b> Rotaract · <b>Partner hour:</b> Writing Center</p></article><article class="daycard" id="day-wed" style="--c:#1baf7a;--cd:#199e70;--on:#ffffff"><header><span class="pill">Wednesday</span><h3>Arts and Humanities, with Labor Studies</h3></header><p class="focus"><b>LA28 focus:</b> Games jobs, worker voice, culture, and design</p><ul class="sched"><li class="k-college"><span class="tag">9:00–12:00 · COLLEGE BLOCK</span>CAH + Labor Studies block</li><li class="k-catapult"><span class="tag">1:00–2:00 · CATAPULT</span>Catapult studio</li><li class="k-group"><span class="tag">2:15–3:45 · STUDENT GROUP</span>IEEE Computer Society</li><li class="k-partner"><span class="tag">4:00–5:00 · SUCCESS PARTNER</span>First-Year + Transfer hour</li></ul><p class="sub"><b>Starting ideas</b></p><ul><li>Labor Studies tracks Games hiring and job quality for South Bay workers</li><li>Design, media, and language students serve local makers and vendors</li><li>Cultural programming that tells the story of Carson and Compton</li></ul><p class="meta"><b>Student group:</b> IEEE Computer Society · <b>Partner hour:</b> First-Year and Transfer Experience</p></article><article class="daycard" id="day-thu" style="--c:#eda100;--cd:#c98500;--on:#0b0b0b"><header><span class="pill">Thursday</span><h3>Education</h3></header><p class="focus"><b>LA28 focus:</b> Youth, schools, and volunteer training</p><ul class="sched"><li class="k-college"><span class="tag">9:00–11:15 · COLLEGE BLOCK</span>COE innovation block</li><li class="k-speaker"><span class="tag">11:30–1:00 · SPEAKERS</span>Speaker series 2: LA28 Ready</li><li class="k-catapult"><span class="tag">1:15–2:30 · CATAPULT</span>Catapult studio</li><li class="k-group"><span class="tag">2:30–3:45 · STUDENT GROUP</span>HRMA</li><li class="k-partner"><span class="tag">4:00–5:00 · SUCCESS PARTNER</span>Writing Center pitch hour</li></ul><p class="sub"><b>Starting ideas</b></p><ul><li>Games-themed lessons and field projects with local schools</li><li>Training for student volunteers and community hosts</li><li>Youth entrepreneurship days with partner programs</li></ul><p class="meta"><b>Student group:</b> Human Resource Management Association (HRMA) · <b>Partner hour:</b> Writing Center</p></article><article class="daycard" id="day-fri" style="--c:#e87ba4;--cd:#d55181;--on:#ffffff"><header><span class="pill">Friday</span><h3>Business Administration and Public Policy</h3></header><p class="focus"><b>LA28 focus:</b> Small business supplier readiness</p><ul class="sched"><li class="k-program"><span class="tag">7:30–10:00 · PROGRAM</span>Carson academy (if approved)</li><li class="k-catapult"><span class="tag">10:15–11:30 · CATAPULT</span>Catapult studio + supplier clinic</li><li class="k-group"><span class="tag">11:30–12:45 · STUDENT GROUP</span>Latine Business Student Assoc.</li><li class="k-college"><span class="tag">1:00–5:00 · COLLEGE BLOCK</span>CBAPP block: Alpha Start</li></ul><p class="sub"><b>Starting ideas</b></p><ul><li>RAMP LA registration, county certification, and a capability statement for each business</li><li>Alpha Start bootcamps for student founders</li><li>Carson Small Business Academy, if the City approves a new agreement</li></ul><p class="meta"><b>Student group:</b> Latine Business Student Association · <b>Partner hour:</b> Community Engaged Learning</p></article></div>
+</section>
+
+<section id="options">
+  <h2>Two ways to staff it</h2>
+  <p class="sec">Both options give each college 3 WTU and share one student pool. The difference is whether a Faculty Director sits on top.</p>
+  <div class="seg" role="group" aria-label="Choose an option">
+    <button data-opt="B" aria-pressed="true">Option B: five college leads</button>
+    <button data-opt="A" aria-pressed="false">Option A: add a Faculty Director</button>
+  </div>
+  <div class="twocol">
+    <div class="panel"><h3>Cost a year</h3>
+      <div class="bars" id="cost"></div>
+      <p class="note" id="costnote"></p></div>
+    <div class="panel"><h3>Faculty hours a semester</h3>
+      <div class="bars" id="hours"></div>
+      <p class="note">The dashed line marks the 730 hours the current programs need each semester (October 2026 estimate).</p></div>
+  </div>
+  <p class="verdict" id="verdict"></p>
+  <p class="note">Costs use Academic Affairs' rate of $2,488.40 per WTU and 45 hours per WTU a semester. The $105,786 base budget includes a vacant half-time Executive Director line of $42,162; both gaps assume it stays and funds faculty time. Without it, the gaps are $49,851 (B) and $79,712 (A).</p>
+</section>
+
+<section id="results">
+  <h2>Results so far</h2>
+  <p class="sec">The Incubator already produces results with one part-time director. These come from campus records for 2026.</p>
+  <div class="tiles"><div class="tile"><b>146</b><span>students in Catapult courses, fall 2026</span><small>3 courses, 16 client organizations</small></div><div class="tile"><b>16</b><span>community clients served by Catapult teams</span><small>fall 2026</small></div><div class="tile"><b>7 of 8</b><span>prizes won by CSUDH teams at Arevon AIRE 2026</span><small>16 teams, $28,000 in prizes</small></div><div class="tile"><b>90%+</b><span>completion in EPUC LA, the Compton founder program</span><small>with Notre Dame&#x27;s UPBI</small></div><div class="tile"><b>8</b><span>Carson Small Business Academy cohorts to date</span><small>City of Carson partnership</small></div><div class="tile"><b>5</b><span>student teams applied for the SDSU Social Venture Challenge</span><small>13 students, November 2026</small></div></div>
+</section>
+
+<section id="targets">
+  <h2>What success looks like</h2>
+  <p class="sec">Proposed targets for the first full year, to be set with the deans and reported every June.</p>
+  <div class="tiles"><div class="tile"><b>200</b><span>unique students a year, counted once</span></div><div class="tile"><b>10</b><span>Catapult courses a year, one per college each semester</span></div><div class="tile"><b>24</b><span>speaker talks a semester across two series</span></div><div class="tile"><b>15</b><span>local businesses served and registered on RAMP LA</span></div><div class="tile"><b>8</b><span>Alpha Start bootcamps a year</span></div><div class="tile"><b>5</b><span>student groups meeting weekly in the space</span></div></div>
+</section>
+
+<section id="partners">
+  <h2>Student success partners</h2>
+  <p class="sec">The space should also serve students who have never thought of themselves as founders. Each partner gets a regular hour and a goal to confirm together.</p>
+  <div class="three"><div class="pcard"><h3>Writing Center</h3><p>Pitch and proposal hours, twice a week</p><p class="goal"><b>Goal:</b> 60 students a semester get feedback on a pitch, grant, or capability statement</p></div><div class="pcard"><h3>First-Year and Transfer Experience</h3><p>A weekly hour that brings new Toros into the space</p><p class="goal"><b>Goal:</b> 100 first-year and transfer students attend a college day in their first term</p></div><div class="pcard"><h3>Toro Learning &amp; Testing Center</h3><p>Weekly drop-in help with the numbers behind a venture</p><p class="goal"><b>Goal:</b> 50 tutoring visits a semester on pricing, budgets, and spreadsheets</p></div><div class="pcard"><h3>Community Engaged Learning</h3><p>Runs the Catapult studio with each college, every day</p><p class="goal"><b>Goal:</b> One Catapult course in every college each semester</p></div></div>
+</section>
+
+<section id="la28">
+  <h2>Why now: LA28</h2>
+  <ul class="plain">
+    <li>The stadium complex on the CSUDH campus is set to host five Olympic and three Paralympic sports in 2028.</li>
+    <li>LA28's procurement plan aims 25% of its addressable spending at small businesses and 75% at the Los Angeles region.</li>
+    <li>LA County's Path to 2028 runs business readiness workshops that campuses and cities can co-host.</li>
+    <li>LA28's Made for Two-Eight licensing program for small local makers takes applications into February 2027.</li>
+  </ul>
+  <p class="sec">An LA28 focus gives every college a reason to use the space, and gives Carson, Compton, and South Bay businesses a campus partner while contracts are still open.</p>
+</section>
+
+<section id="roadmap">
+  <h2>Roadmap</h2>
+  <p class="sec">A spring 2027 pilot gives the model three semesters before the Games. Diamonds are decisions.</p>
+  <ol class="road"><li class="m-gate"><time>Dec 2026</time><span>President endorses the direction</span></li><li class="m-gate"><time>Jan 2027</time><span>Deans name five faculty leads</span></li><li class="m-step"><time>Feb 2027</time><span>Spring pilot: five college days begin</span></li><li class="m-date"><time>Feb 5, 2027</time><span>CPaCE Accelerator proposal due</span></li><li class="m-date"><time>Mar 12, 2027</time><span>2027-28 structure memo due</span></li><li class="m-date"><time>Jun 11, 2027</time><span>CPaCE final reports and first impact report</span></li><li class="m-step"><time>Aug 2027</time><span>Full model, year one</span></li><li class="m-games"><time>Jul 14, 2028</time><span>Olympic Games open (July 14-30)</span></li><li class="m-games"><time>Aug 15, 2028</time><span>Paralympic Games (Aug 15-27)</span></li></ol>
+</section>
+
+<footer id="sources">
+  <p><b>Sources</b></p>
+  <ul><li>Academic Affairs, Office of the Provost. (2026, November 9). FY 2026–27 Innovation Incubator budget, balances, and WTU rate [campus record].</li><li>CSUDH Innovation Incubator. (2026, October 23). Spring 2027 faculty-time estimate by program [campus record].</li><li>CSUDH Innovation Incubator. (2026, November 11). Assessment and participation data, fall 2026 [campus record].</li><li>California State University, Dominguez Hills. (2026). Division of Academic Affairs. Academic Catalog 2026–2027. <a href="https://catalog.csudh.edu/general-information/division-academic-affairs/">catalog.csudh.edu</a></li><li>Dignity Health Sports Park. (n.d.). About us. <a href="https://www.dignityhealthsportspark.com/about/about-us">www.dignityhealthsportspark.com</a></li><li>LA28. (2026, April 8). LA28 details procurement strategy to boost regional economy. <a href="https://la28.org/en/newsroom/la28-details-procurement-strategy-to-boost-regional-economy.html">la28.org</a></li><li>LA28. (2026, October 20). LA28 opens its brand to local businesses through new Made for Two-Eight license program. <a href="https://la28.org/en/newsroom/la28-opens-its-brand-to-local-businesses-through-new-made-for-two-eight-license-program.html">la28.org</a></li><li>Los Angeles County Department of Economic Opportunity. (n.d.). Path to 2028. <a href="https://opportunity.lacounty.gov/pathto2028/">opportunity.lacounty.gov</a></li><li>Fresno State, Lyles Center for Innovation and Entrepreneurship. (n.d.). Johanson Entrepreneurship Faculty Fellows. <a href="https://craig.fresnostate.edu/lyles/johansonworkshops.html">craig.fresnostate.edu</a></li></ul>
+  <p>Campus records are not posted online. Program results are as reported by the Incubator and have not been independently audited. Days, hours, leads, and goals are proposals until the colleges and units named here agree to them.</p>
+  <p>Prepared by Thomas J. Norman, Ph.D., Professor of Management and Interim Faculty Director of the CSUDH Innovation Incubator. This is an independent faculty proposal. It is not an official publication of California State University, Dominguez Hills.</p>
+</footer>
+</main>
+<script>
+const D={"base": 105786, "work": 730, "today": 270, "students": 34560, "supplies": 4263, "A": {"total": 143335.8, "gap": 37549.79999999999, "faculty": 104512.8, "wtu_sem": 21, "hours_sem": 945}, "B": {"total": 113475.0, "gap": 7689.0, "faculty": 74652.0, "wtu_sem": 15, "hours_sem": 675}};
+const $=s=>document.querySelector(s), fmt=n=>'$'+Math.round(n).toLocaleString('en-US');
+function bars(el,rows,max,f,ref){
+  el.innerHTML=rows.map(r=>{const w=r.v/max*62;return `<div class="bar ${r.em?'em':''}" title="${r.l}: ${f(r.v)}"><span>${r.l}</span><div class="rail">${ref?`<i class="ref" style="left:${ref/max*62}%"></i>`:''}<div class="fill" style="width:${w}%"></div><span class="val" style="left:${w}%">${f(r.v)}</span></div></div>`}).join('');
+}
+function show(k){
+  const o=D[k], other=k==='A'?'B':'A';
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.opt===k));
+  bars($('#cost'),[{l:'Base budget today',v:D.base},{l:'Option '+k,v:o.total,em:1}],D.A.total,fmt);
+  bars($('#hours'),[{l:'Today: 6 WTU',v:D.today},{l:'Option '+k+': '+o.wtu_sem+' WTU',v:o.hours_sem,em:1}],D.A.hours_sem,n=>n.toLocaleString('en-US')+' hours',D.work);
+  $('#costnote').textContent=`Faculty time ${fmt(o.faculty)}, student pool ${fmt(D.students)}, supplies ${fmt(D.supplies)}. That is ${fmt(o.gap)} above the base budget.`;
+  $('#verdict').innerHTML=k==='B'
+   ?`<b>Option B</b> costs ${fmt(o.total)} a year, ${fmt(o.gap)} above today's base. It funds ${o.hours_sem} hours against ${D.work} needed, so it works only if Community Engaged Learning carries Catapult and the colleges add their own time. One lead chairs each semester.`
+   :`<b>Option A</b> costs ${fmt(o.total)} a year, ${fmt(o.gap)} above today's base. It funds ${o.hours_sem} hours, which covers the full ${D.work}-hour estimate, and gives sponsors and the LA28 effort one accountable leader.`;
+}
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.opt)));
+show('B');
+function pick(k){
+  document.querySelectorAll('.col').forEach(c=>c.setAttribute('aria-pressed',c.dataset.day===k));
+  document.querySelectorAll('.daycard').forEach(c=>c.classList.toggle('on',c.id==='day-'+k));
+}
+document.querySelectorAll('.col').forEach(c=>c.addEventListener('click',()=>pick(c.dataset.day)));
+pick('mon');
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+# Toro Innovation Week: one college, one day.
+# Every figure the charts, README, and site use lives in this file.
+# Status words: "record" = from a campus or public record; "proposal" = recommended, not decided.
+meta:
+  title: Toro Innovation Week
+  tagline: Five colleges. Five days. One Innovation Incubator.
+  author: Thomas J. Norman, Ph.D.
+  as_of: "2026-11-24"
+  status: Faculty proposal. Not a university decision.
+
+rates:
+  wtu_cost: 2488.40          # Academic Affairs rate per WTU, Nov 9, 2026
+  hours_per_wtu: 45          # hours per WTU per semester
+  weeks_per_semester: 15
+  student_wage: 18
+  student_hours_week: 60
+  student_weeks_year: 32
+  supplies: 4263
+  base_budget: 105786        # FY 2026-27 base budget, Academic Affairs, Nov 9, 2026
+  base_exec_director_line: 42162   # vacant half-time Executive Director line inside the base
+  work_hours_semester: 730   # estimated spring 2027 faculty hours for current programs (Oct 23, 2026 estimate)
+  director_wtu_today: 6
+
+days:
+  - key: mon
+    day: Monday
+    college: Natural and Behavioral Sciences
+    short: CNBS
+    color: "#2a78d6"
+    color_dark: "#3987e5"
+    focus: Games technology, data, and sustainability
+    ideas:
+      - Student teams map transit, heat, and crowd data for Carson and campus venues
+      - Computing and systems students build simple tools for local suppliers
+      - Sustainability projects tied to the five Olympic and three Paralympic sports on campus
+    group: Toro Guardian Scholars
+    partner: Toro Learning & Testing Center
+  - key: tue
+    day: Tuesday
+    college: Health, Human Services, and Nursing
+    short: CHHSN
+    color: "#eb6834"
+    color_dark: "#d95926"
+    focus: Health, wellness, and adaptive sport
+    ideas:
+      - Paralympic sports on campus as a focus for adaptive-sport and accessibility ventures
+      - Visitor and community health projects with local clinics and nonprofits
+      - Wellness ventures from the SDSU Social Venture Challenge pipeline
+    group: Rotaract
+    partner: Writing Center
+  - key: wed
+    day: Wednesday
+    college: Arts and Humanities, with Labor Studies
+    short: CAH
+    color: "#1baf7a"
+    color_dark: "#199e70"
+    focus: Games jobs, worker voice, culture, and design
+    ideas:
+      - Labor Studies tracks Games hiring and job quality for South Bay workers
+      - Design, media, and language students serve local makers and vendors
+      - Cultural programming that tells the story of Carson and Compton
+    group: IEEE Computer Society
+    partner: First-Year and Transfer Experience
+  - key: thu
+    day: Thursday
+    college: Education
+    short: COE
+    color: "#eda100"
+    color_dark: "#c98500"
+    focus: Youth, schools, and volunteer training
+    ideas:
+      - Games-themed lessons and field projects with local schools
+      - Training for student volunteers and community hosts
+      - Youth entrepreneurship days with partner programs
+    group: Human Resource Management Association (HRMA)
+    partner: Writing Center
+  - key: fri
+    day: Friday
+    college: Business Administration and Public Policy
+    short: CBAPP
+    color: "#e87ba4"
+    color_dark: "#d55181"
+    focus: Small business supplier readiness
+    ideas:
+      - RAMP LA registration, county certification, and a capability statement for each business
+      - Alpha Start bootcamps for student founders
+      - Carson Small Business Academy, if the City approves a new agreement
+    group: Latine Business Student Association
+    partner: Community Engaged Learning
+
+# start/end in 24-hour decimal hours. kind: college | catapult | group | speaker | partner | program
+schedule:
+  mon:
+    - {start: 9.0,  end: 12.0,  kind: college,  label: "CNBS innovation block"}
+    - {start: 13.0, end: 14.25, kind: catapult, label: "Catapult studio"}
+    - {start: 14.5, end: 15.75, kind: group,    label: "Toro Guardian Scholars"}
+    - {start: 16.0, end: 17.0,  kind: partner,  label: "Learning Center drop-in"}
+  tue:
+    - {start: 9.0,  end: 11.25, kind: college,  label: "CHHSN innovation block"}
+    - {start: 11.5, end: 13.0,  kind: speaker,  label: "Speaker series 1 + Rotaract"}
+    - {start: 13.25, end: 14.5, kind: catapult, label: "Catapult studio"}
+    - {start: 14.5, end: 15.75, kind: partner,  label: "Writing Center pitch hour"}
+  wed:
+    - {start: 9.0,  end: 12.0,  kind: college,  label: "CAH + Labor Studies block"}
+    - {start: 13.0, end: 14.0,  kind: catapult, label: "Catapult studio"}
+    - {start: 14.25, end: 15.75, kind: group,   label: "IEEE Computer Society"}
+    - {start: 16.0, end: 17.0,  kind: partner,  label: "First-Year + Transfer hour"}
+  thu:
+    - {start: 9.0,  end: 11.25, kind: college,  label: "COE innovation block"}
+    - {start: 11.5, end: 13.0,  kind: speaker,  label: "Speaker series 2: LA28 Ready"}
+    - {start: 13.25, end: 14.5, kind: catapult, label: "Catapult studio"}
+    - {start: 14.5, end: 15.75, kind: group,    label: "HRMA"}
+    - {start: 16.0, end: 17.0,  kind: partner,  label: "Writing Center pitch hour"}
+  fri:
+    - {start: 7.5,  end: 10.0,  kind: program,  label: "Carson academy (if approved)"}
+    - {start: 10.25, end: 11.5, kind: catapult, label: "Catapult studio + supplier clinic"}
+    - {start: 11.5, end: 12.75, kind: group,    label: "Latine Business Student Assoc."}
+    - {start: 13.0, end: 17.0,  kind: college,  label: "CBAPP block: Alpha Start"}
+
+partners:
+  - name: Writing Center
+    role: Pitch and proposal hours, twice a week
+    goal: 60 students a semester get feedback on a pitch, grant, or capability statement
+  - name: First-Year and Transfer Experience
+    role: A weekly hour that brings new Toros into the space
+    goal: 100 first-year and transfer students attend a college day in their first term
+  - name: Toro Learning & Testing Center
+    role: Weekly drop-in help with the numbers behind a venture
+    goal: 50 tutoring visits a semester on pricing, budgets, and spreadsheets
+  - name: Community Engaged Learning
+    role: Runs the Catapult studio with each college, every day
+    goal: One Catapult course in every college each semester
+
+results:   # records, fall 2026 and 2026 calendar year
+  - {value: "146", label: "students in Catapult courses, fall 2026", note: "3 courses, 16 client organizations"}
+  - {value: "16", label: "community clients served by Catapult teams", note: "fall 2026"}
+  - {value: "7 of 8", label: "prizes won by CSUDH teams at Arevon AIRE 2026", note: "16 teams, $28,000 in prizes"}
+  - {value: "90%+", label: "completion in EPUC LA, the Compton founder program", note: "with Notre Dame's UPBI"}
+  - {value: "8", label: "Carson Small Business Academy cohorts to date", note: "City of Carson partnership"}
+  - {value: "5", label: "student teams applied for the SDSU Social Venture Challenge", note: "13 students, November 2026"}
+
+targets:   # proposals, per academic year unless noted
+  - {value: "200", label: "unique students a year, counted once"}
+  - {value: "10", label: "Catapult courses a year, one per college each semester"}
+  - {value: "24", label: "speaker talks a semester across two series"}
+  - {value: "15", label: "local businesses served and registered on RAMP LA"}
+  - {value: "8", label: "Alpha Start bootcamps a year"}
+  - {value: "5", label: "student groups meeting weekly in the space"}
+
+milestones:
+  - {date: "2026-12", label: "President endorses the direction", kind: gate}
+  - {date: "2027-01", label: "Deans name five faculty leads", kind: gate}
+  - {date: "2027-02", label: "Spring pilot: five college days begin", kind: step}
+  - {date: "2027-02-05", label: "CPaCE Accelerator proposal due", kind: date}
+  - {date: "2027-03-12", label: "2027-28 structure memo due", kind: date}
+  - {date: "2027-06-11", label: "CPaCE final reports and first impact report", kind: date}
+  - {date: "2027-08", label: "Full model, year one", kind: step}
+  - {date: "2028-07-14", label: "Olympic Games open (July 14-30)", kind: games}
+  - {date: "2028-08-15", label: "Paralympic Games (Aug 15-27)", kind: games}
