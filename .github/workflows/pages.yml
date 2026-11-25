@@ -1,9 +1,7 @@
-# Publish site/ to GitHub Pages.
-name: Deploy to Pages
+name: Deploy site to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ["site/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 permissions:
   contents: read
