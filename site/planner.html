@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toro Innovation Week: block planner</title>
+<meta name="description" content="Place college ideas into 4-hour morning, afternoon, and evening blocks and see the students, faculty time, and rooms they use. A faculty proposal, not a university decision.">
+<style>
+:root{--bg:#fff;--card:#f6f5f1;--ink:#1c1b19;--soft:#5d5b54;--line:#dedcd3;--accent:#860038;--gold:#b88a00;--ok:#1d7a4d;--warn:#b3541e;--on:#fff;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#151413;--card:#201f1d;--ink:#f0efec;--soft:#b5b3a8;--line:#35332f;--accent:#e0608c;--gold:#e3b341;--ok:#4cc38a;--warn:#f0a070;--on:#1c1b19}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:28px 20px 80px}
+h1{font-size:clamp(1.8rem,4.5vw,2.8rem);line-height:1.1;margin:.1em 0 .2em;letter-spacing:-.02em}
+h2{font-size:1.25rem;margin:1.6em 0 .4em}
+.lede{color:var(--soft);max-width:68ch;margin:0 0 .8em}
+.status{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.82rem;color:var(--soft)}
+.status b{color:var(--accent)}
+a{color:var(--accent)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);padding:7px 16px;font:inherit;font-size:.9rem;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--on)}
+button.act{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:.88rem;cursor:pointer}
+button.act:hover,.seg button:hover{outline:2px solid var(--accent);outline-offset:-2px}
+button:focus-visible,.idea:focus-visible,.slot:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.fchip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 12px;font:inherit;font-size:.84rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.fchip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.fchip[aria-pressed=true]{background:var(--card);border-color:var(--ink);font-weight:600}
+.tray{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;max-height:300px;overflow:auto;padding:2px}
+.idea{background:var(--card);border:2px solid transparent;border-left:6px solid var(--c);border-radius:10px;padding:8px 10px;cursor:grab;text-align:left;color:var(--ink);font:inherit}
+.idea b{display:block;font-size:.88rem;line-height:1.25}
+.idea small{color:var(--soft);font-size:.76rem;display:block}
+.idea .d{display:none;font-size:.8rem;color:var(--soft);margin-top:3px}
+.x .idea .d{display:block}
+.idea[aria-pressed=true]{border-color:var(--ink)}
+.hint{font-size:.88rem;color:var(--soft);min-height:1.4em;margin:6px 0}
+.grid{display:grid;grid-template-columns:96px repeat(6,minmax(128px,1fr));gap:6px;overflow-x:auto;padding-bottom:6px}
+.gh{font-weight:600;font-size:.9rem;padding:6px 4px;text-align:center}
+.rl{font-size:.8rem;color:var(--soft);padding:6px 2px;line-height:1.3}
+.rl b{color:var(--ink);display:block;font-size:.9rem}
+.slot{background:var(--card);border:1px dashed var(--line);border-radius:10px;min-height:78px;padding:5px;display:flex;flex-direction:column;gap:4px;cursor:pointer}
+.x .slot{min-height:150px}
+.slot.over,.slot.armed:hover{border-color:var(--accent);border-style:solid}
+.anchor{font-size:.72rem;color:var(--soft);border-left:3px solid var(--gold);padding-left:5px;line-height:1.25}
+.pl{background:var(--bg);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:8px;padding:4px 6px;font-size:.8rem;line-height:1.25;position:relative}
+.pl b{display:block;padding-right:16px}
+.pl select{font:inherit;font-size:.74rem;margin-top:3px;max-width:100%;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px}
+.pl .rm{position:absolute;top:1px;right:3px;border:0;background:transparent;color:var(--soft);cursor:pointer;font-size:1rem;line-height:1}
+.pl .rm:hover{color:var(--accent)}
+.lite .pl small,.lite .pl select{display:none}
+.x .pl small{display:block;color:var(--soft);font-size:.72rem}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.rc{background:var(--card);border-radius:12px;padding:16px 18px}
+.rc h3{margin:0 0 2px;font-size:1rem}
+.rc p{margin:.2em 0 .7em;color:var(--soft);font-size:.86rem}
+.meter{margin:7px 0}
+.meter .t{display:flex;justify-content:space-between;font-size:.84rem;gap:8px}
+.meter .tr{height:9px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:3px}
+.meter .fi{height:100%;border-radius:5px;background:var(--c,var(--accent))}
+.meter.over .t span:last-child{color:var(--warn);font-weight:600}
+.big{font-size:1.9rem;font-weight:650;letter-spacing:-.02em;line-height:1.1}
+.lite .more{display:none}
+.assump{display:flex;flex-wrap:wrap;gap:14px;font-size:.84rem;color:var(--soft);margin-top:10px}
+.assump input{vertical-align:middle;width:110px}
+.note{font-size:.82rem;color:var(--soft);max-width:80ch}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:.88rem;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+</style>
+</head>
+<body>
+<main id="app" class="lite">
+  <span class="status"><b>Faculty proposal.</b> Not a university decision. Days and ideas are for discussion.</span>
+  <h1>Block planner</h1>
+  <p class="lede">Pick an idea, then pick a block. Each day has three 4-hour blocks and three rooms. The resources underneath update as you place ideas: student assistants, faculty lead time (3 WTUs per college), and rooms.</p>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="View"><button id="vLite" aria-pressed="true">Light</button><button id="vFull" aria-pressed="false">Expanded</button></div>
+    <button class="act" id="bSeed">Load recommended week</button>
+    <button class="act" id="bClear">Clear</button>
+    <button class="act" id="bLink">Copy link to this plan</button>
+    <button class="act" id="bJson">Download plan (JSON)</button>
+  </div>
+
+  <h2>1. Ideas by college</h2>
+  <div class="filters" id="filters" role="group" aria-label="Filter ideas by college"></div>
+  <div class="tray" id="tray"></div>
+  <div class="hint" id="hint" aria-live="polite">Select an idea, then select a block. You can also drag an idea onto a block.</div>
+
+  <h2>2. The week</h2>
+  <div class="grid" id="grid"></div>
+  <p class="note">Morning 8:30 a.m. to 12:30 p.m., afternoon 1:00 to 5:00 p.m., evening 5:30 to 9:30 p.m. Evening hours are a proposal; building access and staffing after 5:00 p.m. still need to be confirmed. Anchors in gold stay fixed.</p>
+
+  <h2>3. Resources this plan uses</h2>
+  <div class="res" id="res"></div>
+  <div class="assump more" id="assump">
+    <label>Student assistant hours per block <input type="range" id="sHrs" min="0" max="8" value="4"> <b id="sHrsV">4</b></label>
+    <label>Faculty host hours per block <input type="range" id="fHrs" min="0" max="8" value="4"> <b id="fHrsV">4</b></label>
+  </div>
+  <p class="note">Assumptions: 3 WTUs is about 135 hours a semester (45 hours per WTU), or 9 hours a week over a 15-week semester. The shared student pool is 60 assistant hours a week. Monthly items count a quarter as much as weekly ones. Partner and Library hosts are not paid from a college's WTUs. Adjust the sliders in Expanded view.</p>
+</main>
+<div id="toast" role="status"></div>
+
+<script>
+const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat"];
+const BLOCKS=[{n:"Morning",t:"8:30 a.m. to 12:30 p.m."},{n:"Afternoon",t:"1:00 to 5:00 p.m."},{n:"Evening",t:"5:30 to 9:30 p.m."}];
+const ROOMS=["I&I 2100 (40 seats)","Idea Room (16 seats)","Maker space"];
+const OWN={
+ cnbs:{n:"Natural and Behavioral Sciences",s:"CNBS",c:"#2a78d6",w:1},
+ chhsn:{n:"Health, Human Services, and Nursing",s:"CHHSN",c:"#eb6834",w:1},
+ cah:{n:"Arts and Humanities",s:"CAH",c:"#1baf7a",w:1},
+ coe:{n:"Education",s:"COE",c:"#eda100",w:1},
+ cbapp:{n:"Business Administration and Public Policy",s:"CBAPP",c:"#e87ba4",w:1},
+ ceie:{n:"Extended and International Education",s:"CEIE",c:"#7a5cc7",w:1},
+ lib:{n:"University Library",s:"Library",c:"#6b7280"},
+ par:{n:"Campus partners",s:"Partners",c:"#860038"},
+ grp:{n:"Student groups",s:"Groups",c:"#b88a00"}
+};
+// m=1 weekly, .25 monthly. r=preferred room index.
+const IDEAS=[
+ ["cbapp","Supplier readiness clinic","RAMP LA registration, county certification, and a capability statement for each business.",0,0,1],
+ ["cbapp","Alpha Start bootcamp","Student founders; starts 11:00 a.m. or 1:00 p.m. by morning use.",1,0,1],
+ ["cbapp","Founder pitch night","Local owners hear and coach student pitches.",2,0,1],
+ ["cah","Labor Studies: Games jobs and worker voice","Hiring and job quality for South Bay workers.",0,0,1],
+ ["cah","Design and media studio for makers","Design, media, and language students serve local makers and vendors.",1,1,1],
+ ["cah","Carson and Compton story night","Cultural programming, music, and dance.",2,0,1],
+ ["chhsn","Health and wellness venture lab","Wellness ventures from the Social Venture Challenge pipeline.",0,0,1],
+ ["chhsn","Adaptive sport and accessibility studio","Ideas tied to the Paralympic sports on campus.",1,1,1],
+ ["chhsn","Community health night","Visitor and community health projects with local clinics.",2,0,1],
+ ["coe","Youth entrepreneurship day","Games-themed lessons and field projects with local schools.",0,0,1],
+ ["coe","Ed-tech and tutoring studio","Social ventures, tutoring, and after-school program ideas.",1,1,1],
+ ["coe","Volunteer and community host training","Train student volunteers and hosts for LA28 events.",2,0,1],
+ ["cnbs","Data and transit mapping for Carson venues","Student teams map transit, heat, and crowd data.",0,0,1],
+ ["cnbs","Computing tools for local suppliers","Build simple tools; use the Maker space for hardware.",1,2,1],
+ ["cnbs","Hack night","Open build night for sustainability and games-tech projects.",2,2,1],
+ ["ceie","Certificate information sessions","OSHA, SHRM, and Quality for working adults.",0,0,1],
+ ["ceie","Small-business owner workshop","Non-credit workshop for owners and managers.",1,1,1],
+ ["ceie","Working-adult workshop night","Evening non-credit session.",2,0,1],
+ ["lib","Founder research clinic","Monthly, at the lunch hour.",0,1,.25],
+ ["lib","Librarian at Alpha Start","Monthly market and industry research.",1,1,.25],
+ ["par","EPUC cohort (Compton founders)","Saturday cohort; about 16 startups.",0,0,1],
+ ["par","CREST mobility lab","LA28 transportation ideas: bikes, shuttles, accessible travel.",1,2,1],
+ ["par","Dymally Fellows studio","Turn a policy problem into a social venture.",1,1,1],
+ ["par","WIN digital skills studio","Resume and portfolio clinics, AI tools for small business.",1,1,1],
+ ["par","Fly Compton demo day","Partner pays for its own classrooms in the same building; uses our Maker space for robots.",1,2,.25],
+ ["par","Health, Wellness &amp; Recreation Center block","Student-run wellness programs and food tests.",1,0,.25],
+ ["par","Athletics and LA28 lab","Sports business, sponsorship, and event operations.",1,0,.25],
+ ["par","AI clinic for small businesses","Monthly; tied to the Team TORO AI group.",1,1,.25],
+ ["grp","Toro Guardian Scholars","Weekly student group.",2,1,1],
+ ["grp","Rotaract","Weekly student group; lunch speakers Tuesdays.",2,1,1],
+ ["grp","IEEE Computer Society","Weekly student group.",2,1,1],
+ ["grp","HRMA","Weekly student group.",2,1,1],
+ ["grp","Latine Business Student Association","Weekly student group.",2,1,1]
+].map((a,i)=>({id:i,o:a[0],t:a[1],d:a[2],b:a[3],r:a[4],m:a[5]}));
+const ANCH={"1-0":"Rotaract lunch speakers 11:30 to 1:00","3-0":"LA28 Ready speakers 11:30 to 1:00","4-1":"Alpha Start (11:00 or 1:00 start)"};
+let plan=[],sel=null,filt="all",uid=1;
+const $=s=>document.querySelector(s);
+const ideaById=id=>IDEAS.find(i=>i.id===id);
+function seed(){
+  const S=[[0,0,"CNBS Data and transit",12],[0,1,"CREST",21],[1,0,"CHHSN",6],[1,1,"Dymally",22],[2,0,"CAH Labor",3],[2,1,"WIN",23],[3,0,"COE",9],[4,0,"CBAPP clinic",0],[4,1,"Alpha Start",1],[5,0,"EPUC",20],[5,1,"Fly Compton",24]];
+  const room={12:0,21:2,6:0,22:1,3:0,23:1,9:0,0:0,1:0,20:0,24:2};
+  plan=S.map(s=>({id:uid++,i:s[3],day:s[0],blk:s[1],room:room[s[3]]}));
+}
+function cellItems(d,b){return plan.filter(p=>p.day===d&&p.blk===b)}
+function place(i,d,b){
+  const used=cellItems(d,b).map(p=>p.room);
+  const idea=ideaById(i);
+  let room=[idea.r,0,1,2].find(r=>!used.includes(r));
+  if(room===undefined){toast("All three rooms are in use in that block.");return}
+  plan.push({id:uid++,i,day:d,blk:b,room});
+  render();
+}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("on"),2600)}
+function renderFilters(){
+  const f=$("#filters");f.innerHTML="";
+  [["all","All",null],...Object.entries(OWN).map(([k,v])=>[k,v.s,v.c])].forEach(([k,l,c])=>{
+    const b=document.createElement("button");b.className="fchip";b.setAttribute("aria-pressed",filt===k);
+    b.innerHTML=(c?`<i style="background:${c}"></i>`:"")+l;b.onclick=()=>{filt=k;renderFilters();renderTray()};f.appendChild(b)})
+}
+function renderTray(){
+  const t=$("#tray");t.innerHTML="";
+  IDEAS.filter(i=>filt==="all"||i.o===filt).forEach(i=>{
+    const b=document.createElement("button");b.className="idea";b.style.setProperty("--c",OWN[i.o].c);
+    b.draggable=true;b.setAttribute("aria-pressed",sel===i.id);
+    b.innerHTML=`<b>${i.t}</b><small>${OWN[i.o].s} · suggested ${BLOCKS[i.b].n.toLowerCase()}${i.m<1?" · monthly":""}</small><span class="d">${i.d}</span>`;
+    b.onclick=()=>{sel=sel===i.id?null:i.id;$("#hint").textContent=sel===null?"Select an idea, then select a block.":`Placing "${i.t.replace(/&amp;/g,"&")}". Select a block on the calendar.`;renderTray();renderGrid()};
+    b.ondragstart=e=>{e.dataTransfer.setData("text/plain",String(i.id));sel=i.id};
+    t.appendChild(b)})
+}
+function renderGrid(){
+  const g=$("#grid");g.innerHTML="";
+  g.appendChild(Object.assign(document.createElement("div"),{className:"gh"}));
+  DAYS.forEach(d=>g.appendChild(Object.assign(document.createElement("div"),{className:"gh",textContent:d})));
+  BLOCKS.forEach((bl,b)=>{
+    const rl=document.createElement("div");rl.className="rl";rl.innerHTML=`<b>${bl.n}</b>${bl.t}`;g.appendChild(rl);
+    DAYS.forEach((_,d)=>{
+      const s=document.createElement("div");s.className="slot"+(sel!==null?" armed":"");s.tabIndex=0;s.setAttribute("role","button");
+      s.setAttribute("aria-label",`${DAYS[d]} ${bl.n}: ${cellItems(d,b).length} of 3 rooms in use`);
+      if(ANCH[d+"-"+b]){s.innerHTML=`<div class="anchor">${ANCH[d+"-"+b]}</div>`}
+      cellItems(d,b).forEach(p=>{
+        const i=ideaById(p.i),el=document.createElement("div");el.className="pl";el.style.setProperty("--c",OWN[i.o].c);
+        el.innerHTML=`<b>${i.t}</b><small>${OWN[i.o].s}</small>`;
+        const rm=document.createElement("button");rm.className="rm";rm.textContent="×";rm.setAttribute("aria-label","Remove "+i.t.replace(/&amp;/g,"&"));
+        rm.onclick=e=>{e.stopPropagation();plan=plan.filter(x=>x.id!==p.id);render()};el.appendChild(rm);
+        const sl=document.createElement("select");sl.setAttribute("aria-label","Room");
+        ROOMS.forEach((r,ri)=>{const o=new Option(r,ri,false,ri===p.room);sl.appendChild(o)});
+        sl.onclick=e=>e.stopPropagation();
+        sl.onchange=()=>{const n=+sl.value;if(cellItems(d,b).some(x=>x.id!==p.id&&x.room===n)){toast("That room is taken in this block.");render();return}p.room=n;render()};
+        el.appendChild(sl);s.appendChild(el)});
+      const act=()=>{if(sel===null){toast("Select an idea first.");return}place(sel,d,b)};
+      s.onclick=act;s.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}};
+      s.ondragover=e=>{e.preventDefault();s.classList.add("over")};s.ondragleave=()=>s.classList.remove("over");
+      s.ondrop=e=>{e.preventDefault();s.classList.remove("over");const id=+e.dataTransfer.getData("text/plain");if(!isNaN(id))place(id,d,b)};
+      g.appendChild(s)})})
+}
+function meter(label,val,max,color,unit){
+  const over=val>max,pct=Math.min(100,max?val/max*100:0);
+  return `<div class="meter${over?" over":""}" style="--c:${color}"><div class="t"><span>${label}</span><span>${(+val.toFixed(1))} of ${max} ${unit}${over?" · over":""}</span></div><div class="tr"><div class="fi" style="width:${pct}%"></div></div></div>`
+}
+function renderRes(){
+  const sH=+$("#sHrs").value,fH=+$("#fHrs").value;
+  $("#sHrsV").textContent=sH;$("#fHrsV").textContent=fH;
+  const wsum=plan.reduce((a,p)=>a+ideaById(p.i).m,0);
+  const stu=wsum*sH;
+  const fac={};plan.forEach(p=>{const i=ideaById(p.i);fac[i.o]=(fac[i.o]||0)+fH*i.m});
+  const roomUse=[0,0,0];plan.forEach(p=>roomUse[p.room]+=ideaById(p.i).m>=1?1:ideaById(p.i).m);
+  const cells=new Set(plan.map(p=>p.day+"-"+p.blk)).size;
+  const colleges=Object.entries(OWN).filter(([k,v])=>v.w);
+  const r=$("#res");
+  r.innerHTML=`
+  <div class="rc"><h3>Students</h3><p>Shared student-assistant pool for setup, promotion, and check-in.</p>
+    <div class="big">${(+stu.toFixed(1))} <span style="font-size:1rem;font-weight:400;color:var(--soft)">of 60 hours a week</span></div>
+    ${meter("Student assistant hours",stu,60,"var(--accent)","hrs")}
+    <p class="more">${(+wsum.toFixed(2))} block-equivalents placed. Each block uses ${sH} assistant hours.</p></div>
+  <div class="rc"><h3>Faculty: 3 WTUs per college</h3><p>3 WTUs is about 9 lead hours a week. At ${fH} hours a block, that covers ${Math.floor(9/Math.max(fH,1)*10)/10} blocks.</p>
+    ${colleges.map(([k,v])=>meter(v.s,fac[k]||0,9,v.c,"hrs")).join("")}
+    <p class="more">Library, partner, and student-group hosts: ${["lib","par","grp"].map(k=>`${OWN[k].s} ${(+(fac[k]||0).toFixed(1))} hrs`).join(", ")}. These are not drawn from college WTUs.</p></div>
+  <div class="rc"><h3>Rooms</h3><p>Three rooms. ${cells} of 18 blocks have at least one use.</p>
+    ${ROOMS.map((n,k)=>meter(n,roomUse[k],18,["#2a78d6","#1baf7a","#eda100"][k],"blocks")).join("")}
+    <p class="more">Each room can hold one use per block. Fly Compton rents its own classrooms in the same building, so it is placed in the Maker space only.</p></div>`;
+}
+function render(){renderTray();renderGrid();renderRes()}
+function setView(x){const a=$("#app");a.classList.toggle("x",x);a.classList.toggle("lite",!x);$("#vFull").setAttribute("aria-pressed",x);$("#vLite").setAttribute("aria-pressed",!x);render()}
+$("#vLite").onclick=()=>setView(false);$("#vFull").onclick=()=>setView(true);
+$("#sHrs").oninput=renderRes;$("#fHrs").oninput=renderRes;
+$("#bSeed").onclick=()=>{seed();render();toast("Recommended week loaded.")};
+$("#bClear").onclick=()=>{plan=[];render()};
+const pack=()=>btoa(unescape(encodeURIComponent(JSON.stringify(plan.map(p=>[p.i,p.day,p.blk,p.room])))));
+$("#bLink").onclick=()=>{const u=location.href.split("#")[0]+"#"+pack();history.replaceState(null,"",u);(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast("Link copied."),()=>toast("Link is in the address bar."))};
+$("#bJson").onclick=()=>{const rows=plan.map(p=>{const i=ideaById(p.i);return{day:DAYS[p.day],block:BLOCKS[p.blk].n,time:BLOCKS[p.blk].t,room:ROOMS[p.room],college:OWN[i.o].n,idea:i.t.replace(/&amp;/g,"&")}});
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({status:"proposal",plan:rows},null,2)],{type:"application/json"}));a.download="block-plan.json";a.click()};
+try{const h=location.hash.slice(1);if(h){plan=JSON.parse(decodeURIComponent(escape(atob(h)))).map(a=>({id:uid++,i:a[0],day:a[1],blk:a[2],room:a[3]})).filter(p=>ideaById(p.i))}else seed()}catch(e){seed()}
+renderFilters();render();
+</script>
+</body>
+</html>

@@ -630,7 +630,7 @@ a{{color:var(--accent)}}
   <span class="status"><b>Faculty proposal</b> · not a university decision · {as_of}</span>
   <h1>{title}</h1>
   <p class="lede">{tagline} Each college hosts one day a week in the CSUDH Innovation Incubator, led by a faculty member with 3 WTU, built around innovation with an LA28 focus.</p>
-  <nav><a href="#week">The week</a><a href="#options">Two options</a><a href="#results">Results so far</a><a href="#targets">Targets</a><a href="#partners">Partners</a><a href="#la28">Why LA28</a><a href="#roadmap">Roadmap</a><a href="#sources">Sources</a></nav>
+  <nav><a href="#week">The week</a><a href="#options">Two options</a><a href="#results">Results so far</a><a href="#targets">Targets</a><a href="#partners">Partners</a><a href="#la28">Why LA28</a><a href="#roadmap">Roadmap</a><a href="#sources">Sources</a><a href="planner.html">Block planner</a></nav>
   <div class="tiles">{head}</div>
 </header>
 
